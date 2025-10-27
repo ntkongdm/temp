@@ -58,9 +58,20 @@ module.exports = async ({ github, context }) => {
       });
     }
 
+    const chatBody = replaceTemplatePlaceholders(fs.readFileSync('.github/trivy-chat-template.md', 'utf8'), {
+      '{{VULN_COUNT}}': vulnCount,
+      '{{CRITICAL_COUNT}}': criticalCount,
+      '{{HIGH_COUNT}}': highCount,
+      '{{SCAN_TIME}}': new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+      '{{VULNERABILITY_TABLE}}': vulnerabilityTable,
+      '{{RAW_OUTPUT}}': rawOutput,
+      '{{RUN_ID}}': context.runId,
+      '{{WORKFLOW_URL}}': `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+    });
+
     const webhook = process.env.WEBHOOK_URL;
     if (webhook) {
-      const payload = commentBody; // raw string
+      const payload = chatBody; // raw string
 
       await new Promise((resolve, reject) => {
         const req = https.request(webhook, {
