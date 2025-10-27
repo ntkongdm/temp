@@ -29,7 +29,7 @@ jobs:
 
   trivy-scan:
     name: Trivy Security Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # hoặc ubuntu-latest nếu ko dùng self-hosted runner
     permissions:
       contents: read
       pull-requests: write
@@ -87,6 +87,33 @@ jobs:
             core.setOutput('vuln_count', result.vulnCount);
             core.setOutput('critical_count', result.criticalCount);
 
+      - name: Send results to HTTP endpoint
+        if: always()
+        run: |
+          # Đọc nội dung file table
+          SCAN_RESULTS=$(cat trivy-results.json)
+
+          # Tạo JSON payload
+          PAYLOAD=$(jq -n \
+            --arg results "$SCAN_RESULTS" \
+            --arg repo "${{ github.repository }}" \
+            --arg pr "${{ github.event.pull_request.number }}" \
+            --arg branch "${{ github.head_ref }}" \
+            --arg commit "${{ github.sha }}" \
+            '{
+              repository: $repo,
+              pull_request: $pr,
+              branch: $branch,
+              commit: $commit,
+              scan_results: $results,
+              timestamp: now | todate
+            }')
+
+          # Gửi request đến HTTP URL
+          curl -X POST "https://workflow.openledger.vn/webhook-test/c813b972-8fd3-4fc6-9d13-9c8c905cf0b6" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" || echo "Failed to send results to webhook"
+
       - name: Fail if critical vulnerabilities found
         if: always()
         run: |
@@ -95,8 +122,8 @@ jobs:
             echo "::error::❌ Found $CRITICAL_COUNT CRITICAL vulnerabilities!"
             exit 1
           fi
-      - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: trivy-results.sarif
+      # - name: Upload SARIF to GitHub Security
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   if: always()
+      #   with:
+      #     sarif_file: trivy-results.sarif
