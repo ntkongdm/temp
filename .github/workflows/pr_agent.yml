@@ -72,7 +72,7 @@ jobs:
       - name: Generate and post comment
         uses: actions/github-script@v7
         env:
-          WEBHOOK_URL: "https://workflow.openledger.vn/webhook-test/c813b972-8fd3-4fc6-9d13-9c8c905cf0b6"
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         if: always()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

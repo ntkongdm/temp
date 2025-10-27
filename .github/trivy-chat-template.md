@@ -1,34 +1,39 @@
-## 🔒 Trivy Security Scan Results
+<h2>🔒 Trivy Security Scan Results</h2>
 
-**Scan Summary:**
+<p>
+  <a href="{{WORKFLOW_URL}}">View Workflow</a> · Run #{{RUN_ID}}
+</p>
 
--  🎯 Severity Filter: `CRITICAL`, `HIGH`
--  📦 Total Vulnerabilities: `{{VULN_COUNT}}`
--  ⚠️ Critical: `{{CRITICAL_COUNT}}`
--  🔶 High: `{{HIGH_COUNT}}`
--  📅 Scan Time: `{{SCAN_TIME}}`
+<p><strong>Scan Summary:</strong></p>
+<ul>
+  <li>Severity Filter: <code>CRITICAL</code>, <code>HIGH</code></li>
+  <li>Total Vulnerabilities: <strong>{{VULN_COUNT}}</strong></li>
+  <li>Critical: <strong>{{CRITICAL_COUNT}}</strong></li>
+  <li>High: <strong>{{HIGH_COUNT}}</strong></li>
+  <li>Scan Time: <strong>{{SCAN_TIME}}</strong></li>
+</ul>
 
----
+<hr/>
 
 {{#if HAS_VULNERABILITIES}}
 
-### 📋 Vulnerability Details
+<h3>📋 Vulnerability Details</h3>
+{{{VULNERABILITY_TABLE}}}
 
-{{VULNERABILITY_TABLE}}
-
-### 🔧 Recommendations
-
-1. Review all CRITICAL vulnerabilities immediately
-2. Update affected packages to fixed versions
-3. Check for available patches or workarounds
+<h3>🔧 Recommendations</h3>
+<ol>
+  <li>Handle <strong>CRITICAL</strong> vulnerabilities immediately.</li>
+  <li>Update affected packages to fixed versions.</li>
+  <li>Apply patches or workarounds if available.</li>
+</ol>
 
 {{else}}
 
-### ✅ No vulnerabilities found!
+<h3>✅ No vulnerabilities found</h3>
+<p>All dependencies look good and up to date.</p>
 
-Your code is looking good! All dependencies are up to date.
 {{/if}}
 
----
+<hr/>
 
-<sub>🤖 Automated by Trivy Scanner | Run #{{RUN_ID}} | [View Workflow]({{WORKFLOW_URL}})</sub>
+<p><sub>Automated by Trivy Scanner</sub></p>
