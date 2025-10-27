@@ -57,7 +57,25 @@ module.exports = async ({ github, context }) => {
       });
     }
 
-    return { vulnCount, criticalCount, highCount, hasVulnerabilities: vulnCount > 0 };
+    const webhook = process.env.WEBHOOK_URL;
+    if (webhook) {
+      const payload = commentBody; // raw string
+
+      await new Promise((resolve, reject) => {
+        const req = https.request(webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' }, // raw body
+        }, res => {
+          res.on('data', () => { }); // ignore
+          res.on('end', resolve);
+        });
+        req.on('error', reject);
+        req.write(payload);
+        req.end();
+      });
+    }
+
+    return { vulnCount, criticalCount, highCount, hasVulnerabilities: vulnCount > 0, commentBody };
 
   } catch (error) {
     console.error('❌ Error:', error);

@@ -71,6 +71,8 @@ jobs:
 
       - name: Generate and post comment
         uses: actions/github-script@v7
+        env:
+          WEBHOOK_URL: "https://workflow.openledger.vn/webhook-test/c813b972-8fd3-4fc6-9d13-9c8c905cf0b6"
         if: always()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -87,32 +89,32 @@ jobs:
             core.setOutput('vuln_count', result.vulnCount);
             core.setOutput('critical_count', result.criticalCount);
 
-      - name: Send results to HTTP endpoint
-        if: always()
-        run: |
-          # Đọc nội dung file table
-          SCAN_RESULTS=$(cat trivy-results.json)
+      # - name: Send results to HTTP endpoint
+      #   if: always()
+      #   run: |
+      #     # Đọc nội dung file table
+      #     SCAN_RESULTS=$(cat trivy-results.json)
 
-          # Tạo JSON payload
-          PAYLOAD=$(jq -n \
-            --arg results "$SCAN_RESULTS" \
-            --arg repo "${{ github.repository }}" \
-            --arg pr "${{ github.event.pull_request.number }}" \
-            --arg branch "${{ github.head_ref }}" \
-            --arg commit "${{ github.sha }}" \
-            '{
-              repository: $repo,
-              pull_request: $pr,
-              branch: $branch,
-              commit: $commit,
-              scan_results: $results,
-              timestamp: now | todate
-            }')
+      #     # Tạo JSON payload
+      #     PAYLOAD=$(jq -n \
+      #       --arg results "$SCAN_RESULTS" \
+      #       --arg repo "${{ github.repository }}" \
+      #       --arg pr "${{ github.event.pull_request.number }}" \
+      #       --arg branch "${{ github.head_ref }}" \
+      #       --arg commit "${{ github.sha }}" \
+      #       '{
+      #         repository: $repo,
+      #         pull_request: $pr,
+      #         branch: $branch,
+      #         commit: $commit,
+      #         scan_results: $results,
+      #         timestamp: now | todate
+      #       }')
 
-          # Gửi request đến HTTP URL
-          curl -X POST "https://workflow.openledger.vn/webhook-test/c813b972-8fd3-4fc6-9d13-9c8c905cf0b6" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD" || echo "Failed to send results to webhook"
+      #     # Gửi request đến HTTP URL
+      #     curl -X POST "https://workflow.openledger.vn/webhook-test/c813b972-8fd3-4fc6-9d13-9c8c905cf0b6" \
+      #       -H "Content-Type: application/json" \
+      #       -d "$PAYLOAD" || echo "Failed to send results to webhook"
 
       - name: Fail if critical vulnerabilities found
         if: always()
