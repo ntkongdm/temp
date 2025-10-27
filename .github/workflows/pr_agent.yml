@@ -28,6 +28,6 @@ jobs:
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
           config.model: v_chat
-          # github_action_config.auto_review: "true"
-          # github_action_config.auto_describe: "true"
-          # github_action_config.auto_improve: "true"
+          config.custom_model_max_tokens: "128000"
+          github_action_config.auto_describe: "true"
+          github_action_config.auto_improve: "true"
