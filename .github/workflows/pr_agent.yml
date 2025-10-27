@@ -25,6 +25,7 @@ jobs:
           OPENAI.KEY: ${{ secrets.OPENAI_KEY }}
           PR_REVIEWER.MODEL: "v_chat"
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
+          GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
           # config.model: v_chat
           # github_action_config.auto_review: "true"
           # github_action_config.auto_describe: "true"
