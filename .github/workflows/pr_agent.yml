@@ -21,17 +21,17 @@ jobs:
         uses: qodo-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm/v1
+          OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm_glm_air/v1
           OPENAI.KEY: ${{ secrets.OPENAI_KEY }}
 
           # 💡 [KHẮC PHỤC CUỐI CÙNG] THÊM TIỀN TỐ "openai/"
-          OPENAI.MODEL: "openai/v_chat"
-          PR_REVIEWER.MODEL: "openai/v_chat"
-          PR_DESCRIPTION.MODEL: "openai/v_chat"
-          PR_CODE_SUGGESTIONS.MODEL: "openai/v_chat"
+          OPENAI.MODEL: "openai/v_air45"
+          PR_REVIEWER.MODEL: "openai/v_air45"
+          PR_DESCRIPTION.MODEL: "openai/v_air45"
+          PR_CODE_SUGGESTIONS.MODEL: "openai/v_air45"
 
           # Cấu hình Token đã được sửa trước đó (giữ nguyên)
-          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "6440"
+          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "128000"
 
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
