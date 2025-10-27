@@ -15,7 +15,6 @@ _Tóm tắt kết quả:_
 
 ---
 
-{{#if HAS_VULNERABILITIES}}
 _Chi tiết lỗ hổng phát hiện:_
 {{VULNERABILITY_TABLE}}
 
@@ -24,11 +23,6 @@ _Kế hoạch hành động đề xuất:_
 1. Xử lý ngay tất cả lỗ hổng CRITICAL (`{{CRITICAL_COUNT}}`)
 2. Cập nhật các package lên bản đã vá
 3. Áp dụng patch/workaround nếu chưa có bản vá chính thức
-
-{{else}}
-✅ _Không phát hiện lỗ hổng CRITICAL/HIGH_
-Mã nguồn & dependencies đang an toàn.
-{{/if}}
 
 ---
 
