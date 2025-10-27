@@ -31,7 +31,7 @@ jobs:
           PR_CODE_SUGGESTIONS.MODEL: "openai/v_chat"
 
           # Cấu hình Token đã được sửa trước đó (giữ nguyên)
-          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "128000"
+          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "6440"
 
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
