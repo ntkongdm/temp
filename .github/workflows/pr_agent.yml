@@ -23,11 +23,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm/v1
           OPENAI.KEY: ${{ secrets.OPENAI_KEY }}
-          PR_REVIEWER.MODEL: "v_chat"
-          OPENAI.MODEL: "v_chat"
+
+          # 💡 [KHẮC PHỤC CUỐI CÙNG] THÊM TIỀN TỐ "openai/"
+          OPENAI.MODEL: "openai/v_chat"
+          PR_REVIEWER.MODEL: "openai/v_chat"
+          PR_DESCRIPTION.MODEL: "openai/v_chat"
+          PR_CODE_SUGGESTIONS.MODEL: "openai/v_chat"
+
+          # Cấu hình Token đã được sửa trước đó (giữ nguyên)
+          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "128000"
+
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
-          config.model: v_chat
-          config.custom_model_max_tokens: "128000"
-          github_action_config.auto_describe: "true"
-          github_action_config.auto_improve: "true"
