@@ -1,0 +1,97 @@
+name: PR Agent + Security Scan
+permissions:
+  contents: write # bắt buộc để checkout
+  pull-requests: write
+  issues: write
+  security-events: write
+
+on:
+  pull_request:
+
+jobs:
+  # pr-agent:
+  #   name: PR Agent Review
+  #   runs-on: self-hosted # hoặc ubuntu-latest nếu ko dùng self-hosted runner
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Run PR Agent
+  #       uses: qodo-ai/pr-agent@main
+  #       env:
+  #         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+  #         # Config self-hosted LLM
+  #         OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm/v1
+  #         config.model: v_chat
+  #         github_action_config.auto_review: "true"
+  #         github_action_config.auto_describe: "true"
+  #         github_action_config.auto_improve: "true"
+
+  trivy-scan:
+    name: Trivy Security Scan
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clean Trivy cache
+        run: |
+          rm -rf .cache/trivy
+          rm -rf ~/.cache/trivy
+
+      - name: Run Trivy scan (JSON format)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scanners: vuln,misconfig
+          ignore-unfixed: true
+          format: json
+          scan-ref: "."
+          output: trivy-results.json
+          severity: CRITICAL,HIGH
+          skip-dirs: .cache/**,trivy
+          skip-files: Manifest.toml,Project.toml
+
+      - name: Run Trivy scan (Table format)
+        uses: aquasecurity/trivy-action@0.28.0
+        if: always()
+        with:
+          scan-type: fs
+          scanners: vuln,misconfig
+          ignore-unfixed: true
+          format: table
+          scan-ref: "."
+          output: trivy-results.txt
+          severity: CRITICAL,HIGH
+          skip-dirs: .cache/**,trivy
+          skip-files: Manifest.toml,Project.toml
+
+      - name: Generate and post comment
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const processTrivy = require('./.github/scripts/trivy-comment.js');
+            const result = await processTrivy({ github, context });
+
+            console.log('📊 Scan Summary:');
+            console.log(`   Total: ${result.vulnCount}`);
+            console.log(`   Critical: ${result.criticalCount}`);
+            console.log(`   High: ${result.highCount}`);
+
+            // Set output cho các step sau
+            core.setOutput('vuln_count', result.vulnCount);
+            core.setOutput('critical_count', result.criticalCount);
+
+      - name: Fail if critical vulnerabilities found
+        if: always()
+        run: |
+          CRITICAL_COUNT=$(cat trivy-results.txt | grep -c "CRITICAL" || true)
+          if [ $CRITICAL_COUNT -gt 0 ]; then
+            echo "::error::❌ Found $CRITICAL_COUNT CRITICAL vulnerabilities!"
+            exit 1
+          fi
