@@ -31,12 +31,12 @@ Your code is looking good! All dependencies are up to date.
 
 ---
 
-<details>
+<!-- <details>
 <summary>📊 Raw Scan Output</summary>
 ```
 {{RAW_OUTPUT}}
 ```
 
-</details>
+</details> -->
 
 <sub>🤖 Automated by Trivy Scanner | Run #{{RUN_ID}} | [View Workflow]({{WORKFLOW_URL}})</sub>
