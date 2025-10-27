@@ -24,6 +24,7 @@ jobs:
           OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm/v1
           OPENAI.KEY: ${{ secrets.OPENAI_KEY }}
           PR_REVIEWER.MODEL: "v_chat"
+          OPENAI.MODEL: "v_chat"
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
           # config.model: v_chat
