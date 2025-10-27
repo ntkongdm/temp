@@ -29,9 +29,9 @@ jobs:
           PR_REVIEWER.MODEL: "openai/v_air45"
           PR_DESCRIPTION.MODEL: "openai/v_air45"
           PR_CODE_SUGGESTIONS.MODEL: "openai/v_air45"
+          config.model: "openai/v_air45"
 
           # Cấu hình Token đã được sửa trước đó (giữ nguyên)
           CONFIG.CUSTOM_MODEL_MAX_TOKENS: "128000"
-
           GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
           GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
