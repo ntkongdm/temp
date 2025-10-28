@@ -1,0 +1,37 @@
+name: Pr agent - AI Code Review
+on:
+  pull_request:
+    # THÊM danh sách types sau để đảm bảo tất cả các sự kiện chính được bắt
+    types: [opened, reopened, ready_for_review, synchronize]
+  issue_comment:
+    types: [created]
+jobs:
+  pr-agent:
+    name: PR Agent Review
+    runs-on: ubuntu-latest # hoặc ubuntu-latest nếu ko dùng self-hosted runner
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run PR Agent
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI.API_BASE: https://genai.vnpay.vn/aigateway/llm_glm_air/v1
+          OPENAI.KEY: ${{ secrets.OPENAI_KEY }}
+
+          # 💡 [KHẮC PHỤC CUỐI CÙNG] THÊM TIỀN TỐ "openai/"
+          OPENAI.MODEL: "openai/v_air45"
+          PR_REVIEWER.MODEL: "openai/v_air45"
+          PR_DESCRIPTION.MODEL: "openai/v_air45"
+          PR_CODE_SUGGESTIONS.MODEL: "openai/v_air45"
+          config.model: "openai/v_air45"
+
+          # Cấu hình Token đã được sửa trước đó (giữ nguyên)
+          CONFIG.CUSTOM_MODEL_MAX_TOKENS: "128000"
+          GITHUB_ACTION_CONFIG.AUTO_REVIEW: "true"
+          GITHUB_ACTION_CONFIG.PR_COMMANDS: "/review, /describe, /improve"
